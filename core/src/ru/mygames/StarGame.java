@@ -1,6 +1,7 @@
 package ru.mygames;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,7 +10,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 public class StarGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
-	Texture wallpaper;
+	Texture background;
 	TextureRegion region;
 
 	//private int x = 0;
@@ -19,7 +20,7 @@ public class StarGame extends ApplicationAdapter {
 		// различных объектов, которые нам понадобятся
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
-		wallpaper = new Texture("imageForHW1.jpg");
+		background = new Texture("imageForHW1.jpg");
 		region = new TextureRegion(img, 25, 25, 100, 50);
 	}
 
@@ -31,8 +32,8 @@ public class StarGame extends ApplicationAdapter {
 		ScreenUtils.clear(1f, 1f, 1f, 0); // очистка экрана перед следующим кадром. Иначе наложение следующего кадра на предыдущий
 		batch.begin(); // метод говорит, что сейчас графическому процессору будет передан список
 		// объектов на отрисовку
-		batch.draw(wallpaper, 0, 0);
-		//batch.draw(img, x, 0); // с помощью данного метода рисуем нужную текстуру с
+		batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		batch.draw(img, 0, 0); // с помощью данного метода рисуем нужную текстуру с
 		// определенными параметрами
 		//batch.setColor(0.56f, 0.32f, 0.67f, 0.5f);
 		//batch.draw(img, 300, 300, 100, 100);
@@ -45,5 +46,6 @@ public class StarGame extends ApplicationAdapter {
 	public void dispose () {  // срабатывает в самом конце. Его задача - очистить память.
 		batch.dispose();
 		img.dispose();
+		background.dispose();
 	}
 }
