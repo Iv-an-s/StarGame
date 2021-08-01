@@ -28,14 +28,15 @@ public class StarGame extends ApplicationAdapter {
 		Vector2 v2 = new Vector2();
 		v2.set(2,1);
 
-		v1.add(v2);
+		v1.add(v2); // сложение векторов
 		System.out.println(String.format("v1.add(v2), v1.x = %s, v1.y = %s", v1.x, v1.y));
 
 		v1.set(7, 7);
 		v2.set(3, 1);
-		v1.sub(v2);
+		v1.sub(v2); // вычитание векторов. Часто используется для последующего определения расстояния.
 		System.out.println(String.format("v1.sub(v2), v1.x = %s, v1.y = %s", v1.x, v1.y));
-		System.out.println("v1.len() = " + v1.len());
+		System.out.println("v1.len() = " + v1.len()); // выводим длину вектора
+
 		v1.scl(0.5f); // скалирование. Умножение вектора на скаляр
 		System.out.println("v1.len() = after scl " + v1.len());
 
@@ -55,8 +56,10 @@ public class StarGame extends ApplicationAdapter {
 
 		v1.set(1, 1);
 		v2.set(-1, 1);
+		// для корректного определения угла вектора необходимо нормализовать:
 		v1.nor();
 		v2.nor();
+		// угол определяем в радианах через arccos:
 		System.out.println(Math.acos(v1.dot(v2)));
 
 	}
