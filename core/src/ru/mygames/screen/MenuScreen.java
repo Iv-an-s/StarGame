@@ -8,16 +8,25 @@ import ru.mygames.base.BaseScreen;
 
 public class MenuScreen extends BaseScreen {
 
+    private static final float V_LEN = 0.5f;
+
     private Texture img;
     private Vector2 pos;
     private Vector2 v;
+    private Vector2 touch;
+    private Vector2 tmp;
+
+    private int x;
+    private int y;
 
     @Override
     public void show() {
         super.show();
         img = new Texture("badlogic.jpg");
         pos = new Vector2();
-        v = new Vector2(1, 1);
+        v = new Vector2();
+        touch = new Vector2();
+        tmp = new Vector2();
     }
 
     @Override
@@ -26,7 +35,12 @@ public class MenuScreen extends BaseScreen {
         batch.begin();
         batch.draw(img, pos.x, pos.y);
         batch.end();
-        pos.add(v);
+        tmp.set(touch);
+        if (tmp.sub(pos).len() > V_LEN){
+            pos.add(v);
+        }else{
+            pos.set(touch);
+        }
     }
 
     @Override
@@ -37,9 +51,10 @@ public class MenuScreen extends BaseScreen {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        pos.set(screenX, Gdx.graphics.getHeight() - screenY); // манипуляция с Y нужна чтобы событийную
+        touch.set(screenX, Gdx.graphics.getHeight() - screenY); // манипуляция с Y нужна чтобы событийную
         // систему координат с началом отсчета в верхнем левом углу привести к системе координат для
         // отрисовки, где ноль по Y внизу.
+        v.set(touch.cpy().sub(pos)).setLength(V_LEN);
         return super.touchDown(screenX, screenY, pointer, button);
     }
 
