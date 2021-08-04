@@ -14,10 +14,6 @@ public class MenuScreen extends BaseScreen {
     private Vector2 pos;
     private Vector2 v;
     private Vector2 touch;
-    private Vector2 tmp;
-
-    private int x;
-    private int y;
 
     @Override
     public void show() {
@@ -26,7 +22,6 @@ public class MenuScreen extends BaseScreen {
         pos = new Vector2();
         v = new Vector2();
         touch = new Vector2();
-        tmp = new Vector2();
     }
 
     @Override
@@ -35,8 +30,7 @@ public class MenuScreen extends BaseScreen {
         batch.begin();
         batch.draw(img, pos.x, pos.y);
         batch.end();
-        tmp.set(touch);
-        if (tmp.sub(pos).len() > V_LEN){
+        if (touch.dst(pos) > V_LEN){
             pos.add(v);
         }else{
             pos.set(touch);
@@ -55,12 +49,12 @@ public class MenuScreen extends BaseScreen {
         // систему координат с началом отсчета в верхнем левом углу привести к системе координат для
         // отрисовки, где ноль по Y внизу.
         v.set(touch.cpy().sub(pos)).setLength(V_LEN);
-        return super.touchDown(screenX, screenY, pointer, button);
+        return false;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         pos.set(screenX, Gdx.graphics.getHeight() - screenY);
-        return super.touchDragged(screenX, screenY, pointer);
+        return false;
     }
 }
