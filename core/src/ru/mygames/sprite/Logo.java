@@ -14,26 +14,24 @@ public class Logo extends Sprite {
     private Vector2 v;
     private Vector2 touch;
 
-    public Logo() {
-        super(new TextureRegion(new Texture("badlogic.jpg")));
+    public Logo(Texture texture) {
+        super(new TextureRegion(texture));
         this.v = new Vector2();
         this.touch = new Vector2();
     }
 
     @Override
-    public void draw(SpriteBatch batch) {
-        super.draw(batch);
+    public void resize(Rect worldBounds) { // здесь метод нужен для выставления размера картинки
+        setHeightProportion(0.2f);
+    }
+
+    @Override
+    public void update(float delta) {
         if (touch.dst(pos) > V_LEN){
             pos.add(v);
         }else{
             pos.set(touch);
         }
-    }
-
-    @Override
-    public void resize(Rect worldBounds) {
-        setHeightProportion(worldBounds.getHeight()*0.2f);
-    //    pos.set(worldBounds.pos);
     }
 
     @Override

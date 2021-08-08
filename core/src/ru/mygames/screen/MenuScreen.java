@@ -12,19 +12,17 @@ public class MenuScreen extends BaseScreen {
 
     private Texture bg;
     private Background background;
+
+    private Texture img;
     private Logo logo;
-    //private Vector2 pos;
 
     @Override
     public void show() {
         super.show();
         bg = new Texture("textures/bg.png");
+        img = new Texture("badlogic.jpg");
         background = new Background(bg);
-        logo = new Logo();
-        //pos = new Vector2();
-        // подставим единичную матрицу проекций вместо дефолтной
-        // (сможем вводить коориднаты в сетке OpenGL от центра)
-        //batch.getProjectionMatrix().idt(); // Метод idt() превращает дефолтную матрицу проекций в единичную
+        logo = new Logo(img);
     }
 
     @Override
@@ -36,22 +34,32 @@ public class MenuScreen extends BaseScreen {
     @Override
     public void render(float delta) {
         super.render(delta);
-        batch.begin();
-        background.draw(batch);
-        logo.draw(batch);
-        logo.draw(batch);
-        batch.end();
+        update(delta);
+        draw();
     }
 
     @Override
     public void dispose() {
         super.dispose();
         bg.dispose();
+        img.dispose();
     }
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
         logo.touchDown(touch, pointer, button);
         return false;
+    }
+
+    private void update(float delta){
+        logo.update(delta);
+    }
+
+    private void draw(){
+        batch.begin();
+        background.draw(batch);
+        logo.draw(batch);
+        logo.draw(batch);
+        batch.end();
     }
 }

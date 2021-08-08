@@ -24,6 +24,10 @@ public class Sprite extends Rect {
         setWidth(height * aspect);
     }
 
+    public void update (float delta){ // delta -константа из метода render(), символизирующая временной
+        // промежуток между срабатываниями метода render(). Метод будет вызываться из render().
+    }
+
     public void draw(SpriteBatch batch){
         batch.draw(
                 regions[frame],  // рисуем текущий фрейм нашего региона
