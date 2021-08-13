@@ -14,6 +14,12 @@ public class Sprite extends Rect {
     protected TextureRegion[] regions; // Т.к. анимация будет состоять из нескольких текстур
     protected int frame; // указывает на текущий элемент массива регионов
 
+    private boolean destroyed; // флаг, который помечает спрайт, что он в игровом процессе больше не участвует
+
+
+    public Sprite() {
+    }
+
     public Sprite(TextureRegion region) { // Для того чтобы отрисовать текстуру, мы ее заворачиваем в Sprite, и вызываем метод draw()
         regions = new TextureRegion[1];
         regions[0] = region;
@@ -74,5 +80,17 @@ public class Sprite extends Rect {
 
     public void setAngle(float angle) {
         this.angle = angle;
+    }
+
+    public void destroy(){
+        destroyed = true;
+    }
+
+    public void flushDestroy(){
+        destroyed = false;
+    }
+
+    public boolean isDestroyed() {
+        return destroyed;
     }
 }

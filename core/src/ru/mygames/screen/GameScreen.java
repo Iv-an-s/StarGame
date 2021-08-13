@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Vector2;
 
 import ru.mygames.base.BaseScreen;
 import ru.mygames.math.Rect;
+import ru.mygames.pool.BulletPool;
 import ru.mygames.sprite.Background;
 import ru.mygames.sprite.MainShip;
 import ru.mygames.sprite.Star;
@@ -19,8 +20,7 @@ public class GameScreen extends BaseScreen {
     private MainShip mainShip;
 
     private TextureAtlas atlas;
-    private TextureAtlas mainAtlas;
-
+    private BulletPool bulletPool;
     private Star[] stars;
 
     @Override
@@ -29,21 +29,25 @@ public class GameScreen extends BaseScreen {
         bg = new Texture("textures/bg.png");
         background = new Background(bg);
 
-        atlas = new TextureAtlas("textures/menuAtlas.tpack");
+        atlas = new TextureAtlas("textures/mainAtlas.tpack");
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
         }
-
-        mainAtlas = new TextureAtlas("textures/mainAtlas.tpack");
-        mainShip = new MainShip(mainAtlas);
+        bulletPool = new BulletPool();
+        mainShip = new MainShip(atlas, bulletPool);
     }
 
     @Override
     public void render(float delta) {
         super.render(delta);
         update(delta);
+        freeAllDestroyed();
         draw();
+    }
+
+    private void freeAllDestroyed(){
+        bulletPool.freeAllDestroyedActiveSprites();
     }
 
     private void draw() {
@@ -53,6 +57,7 @@ public class GameScreen extends BaseScreen {
             star.draw(batch);
         }
         mainShip.draw(batch);
+        bulletPool.drawActiveSprites(batch);
         batch.end();
     }
 
@@ -61,6 +66,7 @@ public class GameScreen extends BaseScreen {
             star.update(delta);
         }
         mainShip.update(delta);
+        bulletPool.updateActiveSprites(delta);
     }
 
     @Override
@@ -78,7 +84,7 @@ public class GameScreen extends BaseScreen {
         super.dispose();
         bg.dispose();
         atlas.dispose();
-        mainAtlas.dispose();
+        bulletPool.dispose();
     }
 
     @Override
