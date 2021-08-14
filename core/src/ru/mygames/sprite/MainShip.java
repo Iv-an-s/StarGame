@@ -1,6 +1,5 @@
 package ru.mygames.sprite;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -16,6 +15,7 @@ public class MainShip extends Sprite {
     private static final float HEIGHT = 0.15f;
     private static final float BOTTOM_MARGIN = 0.05f;
     private static final int INVALID_POINTER = -1;
+    private static final float RELOAD_INTERVAL = 0.2f;
 
     private final Vector2 v0 = new Vector2(0.5f, 0);
     private final Vector2 v = new Vector2();
@@ -33,19 +33,22 @@ public class MainShip extends Sprite {
     private Vector2 bulletV;
     private float bulletHeight;
     private int bulletDamage;
-    private Sound sound;
-    private int count;
+    private Sound bulletSound;
+
+    private float reloadInterval;
+    private float reloadTimer;
 
 
-    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound sound) {
+    public MainShip(TextureAtlas atlas, BulletPool bulletPool, Sound bulletSound) {
         super((atlas.findRegion("main_ship")), 1, 2, 2);
         this.bulletPool = bulletPool;
+        this.bulletSound = bulletSound;
         bulletRegion = atlas.findRegion("bulletMainShip");
         bulletPos = new Vector2();
         bulletV = new Vector2(0, 0.5f);
         bulletHeight = 0.01f;
         bulletDamage = 1;
-        this.sound = sound;
+        reloadInterval = RELOAD_INTERVAL;
 
     }
 
@@ -61,6 +64,11 @@ public class MainShip extends Sprite {
     public void update(float delta) {
         super.update(delta);
         pos.mulAdd(v, delta); // сложение векторов + умножение на скаляр
+        reloadTimer += delta;
+        if (reloadTimer >= reloadInterval){
+            shoot();
+            reloadTimer = 0f;
+        }
 //        if (getRight() > worldBounds.getRight()){
 //            setRight(worldBounds.getRight());
 //            stop();
@@ -75,11 +83,6 @@ public class MainShip extends Sprite {
         }
         if (getRight() < worldBounds.getLeft()){
             setLeft(worldBounds.getRight());
-        }
-        count++;
-        if (count % 10 == 0){
-            shoot(sound);
-            count = 0;
         }
     }
 
@@ -158,9 +161,9 @@ public class MainShip extends Sprite {
                     stop();
                 }
                 break;
-            case Input.Keys.UP:
-                shoot(this.sound);
-                break;
+//            case Input.Keys.UP:
+//                shoot(this.sound);
+//                break;
         }
         return false;
     }
@@ -177,10 +180,10 @@ public class MainShip extends Sprite {
         v.setZero();
     }
 
-    private void shoot(Sound sound){
+    private void shoot(){
         Bullet bullet = bulletPool.obtain();
         bulletPos.set(pos.x, pos.y + getHalfHeight());
         bullet.set(this, bulletRegion, bulletPos, bulletV, bulletHeight, worldBounds, bulletDamage);
-        sound.play();
+        bulletSound.play();
     }
 }
