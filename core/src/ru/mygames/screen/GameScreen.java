@@ -62,6 +62,7 @@ public class GameScreen extends BaseScreen {
     public void render(float delta) {
         super.render(delta);
         update(delta);
+        checkCollisions();
         freeAllDestroyed();
         draw();
     }
@@ -91,6 +92,10 @@ public class GameScreen extends BaseScreen {
         bulletPool.updateActiveSprites(delta);
         enemyPool.updateActiveSprites(delta);
         enemyEmitter.generate(delta);
+    }
+
+    private void checkCollisions(){
+
     }
 
     @Override
