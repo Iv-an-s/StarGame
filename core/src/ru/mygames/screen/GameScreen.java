@@ -10,9 +10,11 @@ import com.badlogic.gdx.math.Vector2;
 import ru.mygames.base.BaseScreen;
 import ru.mygames.math.Rect;
 import ru.mygames.pool.BulletPool;
+import ru.mygames.pool.EnemyPool;
 import ru.mygames.sprite.Background;
 import ru.mygames.sprite.MainShip;
 import ru.mygames.sprite.Star;
+import ru.mygames.utils.EnemyEmitter;
 
 public class GameScreen extends BaseScreen {
 
@@ -24,10 +26,14 @@ public class GameScreen extends BaseScreen {
 
     private TextureAtlas atlas;
     private BulletPool bulletPool;
+    private EnemyPool enemyPool;
     private Star[] stars;
 
     private Music music;
     private Sound laserSound;
+    private Sound bulletSound;
+
+    private EnemyEmitter enemyEmitter;
 
     @Override
     public void show() {
@@ -41,8 +47,12 @@ public class GameScreen extends BaseScreen {
             stars[i] = new Star(atlas);
         }
         bulletPool = new BulletPool();
+        enemyPool = new EnemyPool(worldBounds, bulletPool);
         laserSound = Gdx.audio.newSound(Gdx.files.internal("sounds/laser.wav"));
         mainShip = new MainShip(atlas, bulletPool, laserSound);
+        bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
+        enemyEmitter = new EnemyEmitter(worldBounds, bulletSound, enemyPool, atlas);
+
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         music.setLooping(true);
         music.play();
@@ -58,6 +68,7 @@ public class GameScreen extends BaseScreen {
 
     private void freeAllDestroyed(){
         bulletPool.freeAllDestroyedActiveSprites();
+        enemyPool.freeAllDestroyedActiveSprites();
     }
 
     private void draw() {
@@ -68,6 +79,7 @@ public class GameScreen extends BaseScreen {
         }
         mainShip.draw(batch);
         bulletPool.drawActiveSprites(batch);
+        enemyPool.drawActiveSprites(batch);
         batch.end();
     }
 
@@ -77,6 +89,8 @@ public class GameScreen extends BaseScreen {
         }
         mainShip.update(delta);
         bulletPool.updateActiveSprites(delta);
+        enemyPool.updateActiveSprites(delta);
+        enemyEmitter.generate(delta);
     }
 
     @Override
@@ -95,7 +109,9 @@ public class GameScreen extends BaseScreen {
         bg.dispose();
         atlas.dispose();
         bulletPool.dispose();
+        enemyPool.dispose();
         laserSound.dispose();
+        bulletSound.dispose();
         music.dispose();
     }
 
