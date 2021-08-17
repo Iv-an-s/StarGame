@@ -7,11 +7,17 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.mygames.base.BaseScreen;
+import ru.mygames.base.Sprite;
 import ru.mygames.math.Rect;
 import ru.mygames.pool.BulletPool;
 import ru.mygames.pool.EnemyPool;
 import ru.mygames.sprite.Background;
+import ru.mygames.sprite.Bullet;
+import ru.mygames.sprite.EnemyShip;
 import ru.mygames.sprite.MainShip;
 import ru.mygames.sprite.Star;
 import ru.mygames.utils.EnemyEmitter;
@@ -95,7 +101,29 @@ public class GameScreen extends BaseScreen {
     }
 
     private void checkCollisions(){
-
+        List<EnemyShip> enemyActiveShips = enemyPool.getActiveSprites();
+        for (int i = 0; i < enemyActiveShips.size(); i++) {
+            if (!mainShip.isOutside(enemyActiveShips.get(i))){
+                enemyActiveShips.get(i).destroy();
+            }
+        }
+        List<Bullet> activeBullets = bulletPool.getActiveSprites();
+        for (int i = 0; i < activeBullets.size(); i++) {
+            if (!mainShip.isOutside(activeBullets.get(i))){
+                activeBullets.get(i).destroy();
+            }
+            if (activeBullets.get(i).getOwner().equals(mainShip)){
+                for (int j = 0; j < enemyActiveShips.size(); j++) {
+                    if (!activeBullets.get(i).isOutside(enemyActiveShips.get(j))){
+                        activeBullets.get(i).destroy();
+                        enemyActiveShips.get(j).setHp(enemyActiveShips.get(j).getHp()-1);
+                        if (enemyActiveShips.get(j).getHp() == 0){
+                            enemyActiveShips.get(j).destroy();
+                        }
+                    }
+                }
+            }
+        }
     }
 
     @Override
