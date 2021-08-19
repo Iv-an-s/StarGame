@@ -165,5 +165,9 @@ public class MainShip extends Ship {
         v.setZero();
     }
 
-
+    @Override
+    public void flushDestroy() {
+        super.flushDestroy();
+        this.hp = 100;
+    }
 }
