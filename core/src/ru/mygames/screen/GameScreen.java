@@ -68,12 +68,20 @@ public class GameScreen extends BaseScreen {
         mainShip = new MainShip(atlas, bulletPool, explosionPool, laserSound);
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         enemyEmitter = new EnemyEmitter(worldBounds, bulletSound, enemyPool, atlas);
+
         gameOverMessage = new GameOverMessage(atlas);
-        newGameButton = new NewGameButton(atlas, mainShip, enemyPool, bulletPool, explosionPool);
+        newGameButton = new NewGameButton(atlas, this);
 
         music = Gdx.audio.newMusic(Gdx.files.internal("sounds/music.mp3"));
         music.setLooping(true);
         music.play();
+    }
+
+    public void startNewGame(){
+        mainShip.startNewGame();
+        bulletPool.freeAllActiveSprites();
+        enemyPool.freeAllActiveSprites();
+        explosionPool.freeAllActiveSprites();
     }
 
     @Override
@@ -103,7 +111,9 @@ public class GameScreen extends BaseScreen {
             enemyPool.drawActiveSprites(batch);
         }else{
             gameOverMessage.draw(batch);
-            newGameButton.draw(batch);
+            if (explosionPool.getActiveSprites().isEmpty()){
+                newGameButton.draw(batch);
+            }
         }
         explosionPool.drawActiveSprites(batch);
         batch.end();
@@ -190,15 +200,21 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public boolean touchDown(Vector2 touch, int pointer, int button) {
-        mainShip.touchDown(touch, pointer, button);
-        newGameButton.touchDown(touch, pointer, button);
+        if (mainShip.isDestroyed()){
+            newGameButton.touchDown(touch, pointer, button);
+        }else{
+            mainShip.touchDown(touch, pointer, button);
+        }
         return false;
     }
 
     @Override
     public boolean touchUp(Vector2 touch, int pointer, int button) {
-        mainShip.touchUp(touch, pointer,button);
-        newGameButton.touchUp(touch, pointer, button);
+        if (mainShip.isDestroyed()){
+            newGameButton.touchUp(touch, pointer, button);
+        }else {
+            mainShip.touchUp(touch, pointer,button);
+        }
         return false;
     }
 

@@ -1,41 +1,34 @@
 package ru.mygames.sprite;
 
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import ru.mygames.base.BaseButton;
 import ru.mygames.math.Rect;
 import ru.mygames.pool.BulletPool;
 import ru.mygames.pool.EnemyPool;
 import ru.mygames.pool.ExplosionPool;
+import ru.mygames.screen.GameScreen;
 
 public class NewGameButton extends BaseButton {
 
-    private final MainShip mainShip;
-    private final EnemyPool enemyPool;
-    private final BulletPool bulletPool;
-    private final ExplosionPool explosionPool;
+    private static final float HEIGHT = 0.05f;
 
+    private final GameScreen gameScreen;
 
-    public NewGameButton(TextureAtlas atlas, MainShip mainShip, EnemyPool enemyPool, BulletPool bulletPool, ExplosionPool explosionPool) {
+    public NewGameButton(TextureAtlas atlas, GameScreen gameScreen) {
         super(atlas.findRegion("button_new_game"));
-        this.mainShip = mainShip;
-        this.enemyPool = enemyPool;
-        this.bulletPool = bulletPool;
-        this.explosionPool = explosionPool;
+        this.gameScreen = gameScreen;
+
     }
 
     @Override
     public void resize(Rect worldBounds) {
-        setHeightProportion(0.05f);
+        setHeightProportion(HEIGHT);
         setBottom(worldBounds.getBottom()/2);
     }
 
     @Override
     public void action() {
-        enemyPool.destroyAllActiveSprites();
-        bulletPool.destroyAllActiveSprites();
-        explosionPool.destroyAllActiveSprites();
-        mainShip.flushDestroy();
+        gameScreen.startNewGame();
     }
 }
