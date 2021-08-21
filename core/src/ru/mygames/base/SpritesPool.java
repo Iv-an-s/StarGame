@@ -40,6 +40,16 @@ public abstract class SpritesPool <T extends Sprite>{
         }
     }
 
+    public void destroyAllActiveSprites(){
+        for (int i = 0; i < activeSprites.size(); i++) {
+            T sprite = activeSprites.get(i);
+            if (!sprite.isDestroyed()){
+                sprite.destroy();
+                i--;
+            }
+        }
+    }
+
     public void freeAllDestroyedActiveSprites(){
         for (int i = 0; i < activeSprites.size(); i++) {
             T sprite = activeSprites.get(i);

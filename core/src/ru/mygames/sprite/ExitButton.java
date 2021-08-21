@@ -2,7 +2,6 @@ package ru.mygames.sprite;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import ru.mygames.base.BaseButton;
 import ru.mygames.math.Rect;
