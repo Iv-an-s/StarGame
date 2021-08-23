@@ -52,6 +52,14 @@ public class MainShip extends Ship {
         flushDestroy();
     }
 
+    public void recover(int level){
+        if((hp + level) < HP){
+            hp+=level;
+        } else {
+            hp = HP;
+        }
+    }
+
     @Override
     public void resize(Rect worldBounds) {
         super.resize(worldBounds);
