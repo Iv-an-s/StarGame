@@ -8,12 +8,10 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Align;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ru.mygames.base.BaseScreen;
 import ru.mygames.base.Font;
-import ru.mygames.base.Sprite;
 import ru.mygames.math.Rect;
 import ru.mygames.pool.BulletPool;
 import ru.mygames.pool.EnemyPool;
@@ -21,7 +19,6 @@ import ru.mygames.pool.ExplosionPool;
 import ru.mygames.sprite.Background;
 import ru.mygames.sprite.Bullet;
 import ru.mygames.sprite.EnemyShip;
-import ru.mygames.sprite.ExitButton;
 import ru.mygames.sprite.GameOverMessage;
 import ru.mygames.sprite.MainShip;
 import ru.mygames.sprite.Medicine;
@@ -58,7 +55,6 @@ public class GameScreen extends BaseScreen {
     private Sound explosionSound;
 
     private EnemyEmitter enemyEmitter;
-
 
     private Font font;
     private int frags;
@@ -213,7 +209,8 @@ public class GameScreen extends BaseScreen {
             }
             if(bullet.getOwner() == mainShip && medicine.isBulletCollision(bullet) && !medicine.isDestroyed()){
                 medicine.destroy();
-                mainShip.recover(enemyEmitter.getLevel());                bullet.destroy();
+                mainShip.recover(enemyEmitter.getLevel());
+                bullet.destroy();
             }
 
             if (bullet.getOwner()!= mainShip && mainShip.isBulletCollision(bullet)){

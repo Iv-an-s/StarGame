@@ -19,8 +19,6 @@ public class MainShip extends Ship {
     private static final int INVALID_POINTER = -1;
     private static final float RELOAD_INTERVAL = 0.2f;
 
-
-
     private boolean pressedLeft;
     private boolean pressedRight;
 

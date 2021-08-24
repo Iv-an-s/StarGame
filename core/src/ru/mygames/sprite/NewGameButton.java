@@ -4,9 +4,6 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 
 import ru.mygames.base.BaseButton;
 import ru.mygames.math.Rect;
-import ru.mygames.pool.BulletPool;
-import ru.mygames.pool.EnemyPool;
-import ru.mygames.pool.ExplosionPool;
 import ru.mygames.screen.GameScreen;
 
 public class NewGameButton extends BaseButton {
@@ -18,7 +15,6 @@ public class NewGameButton extends BaseButton {
     public NewGameButton(TextureAtlas atlas, GameScreen gameScreen) {
         super(atlas.findRegion("button_new_game"));
         this.gameScreen = gameScreen;
-
     }
 
     @Override
