@@ -1,0 +1,19 @@
+
+medcineAtlas.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+medcine2
+  rotate: false
+  xy: 1, 321
+  size: 779, 594
+  orig: 779, 594
+  offset: 0, 0
+  index: -1
+medcine1
+  rotate: false
+  xy: 1, 1
+  size: 474, 318
+  orig: 474, 318
+  offset: 0, 0
+  index: -1

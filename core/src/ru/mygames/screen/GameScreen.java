@@ -24,6 +24,7 @@ import ru.mygames.sprite.EnemyShip;
 import ru.mygames.sprite.ExitButton;
 import ru.mygames.sprite.GameOverMessage;
 import ru.mygames.sprite.MainShip;
+import ru.mygames.sprite.Medicine;
 import ru.mygames.sprite.NewGameButton;
 import ru.mygames.sprite.Star;
 import ru.mygames.utils.EnemyEmitter;
@@ -40,8 +41,10 @@ public class GameScreen extends BaseScreen {
     private Texture bg;
     private Background background;
     private MainShip mainShip;
+    private Medicine medicine;
 
     private TextureAtlas atlas;
+    private TextureAtlas medAtlas;
     private BulletPool bulletPool;
     private ExplosionPool explosionPool;
     private EnemyPool enemyPool;
@@ -70,6 +73,7 @@ public class GameScreen extends BaseScreen {
         background = new Background(bg);
 
         atlas = new TextureAtlas("textures/mainAtlas.tpack");
+        medAtlas = new TextureAtlas("textures/medcineAtlas.pack");
         stars = new Star[STAR_COUNT];
         for (int i = 0; i < stars.length; i++) {
             stars[i] = new Star(atlas);
@@ -82,6 +86,7 @@ public class GameScreen extends BaseScreen {
         mainShip = new MainShip(atlas, bulletPool, explosionPool, laserSound);
         bulletSound = Gdx.audio.newSound(Gdx.files.internal("sounds/bullet.wav"));
         enemyEmitter = new EnemyEmitter(worldBounds, bulletSound, enemyPool, atlas);
+        medicine = new Medicine(medAtlas, explosionPool);
 
         gameOverMessage = new GameOverMessage(atlas);
         newGameButton = new NewGameButton(atlas, this);
@@ -128,6 +133,7 @@ public class GameScreen extends BaseScreen {
         }
         if(!mainShip.isDestroyed()){
             mainShip.draw(batch);
+            medicine.draw(batch);
             bulletPool.drawActiveSprites(batch);
             enemyPool.drawActiveSprites(batch);
         }else{
@@ -157,6 +163,7 @@ public class GameScreen extends BaseScreen {
         explosionPool.updateActiveSprites(delta);
         if (!mainShip.isDestroyed()){
             mainShip.update(delta);
+            medicine.update(delta);
             bulletPool.updateActiveSprites(delta);
             enemyPool.updateActiveSprites(delta);
             enemyEmitter.generate(delta, frags);
@@ -176,9 +183,14 @@ public class GameScreen extends BaseScreen {
                 continue;
             }
             float minDist = enemyShip.getHalfWidth() + mainShip.getHalfWidth();
+            float minDistMedcine = medicine.getHalfWidth() + mainShip.getHalfWidth();
             if (mainShip.pos.dst(enemyShip.pos) < minDist){
                 mainShip.damage(enemyShip.getBulletDamage() * 2);
                 enemyShip.destroy();
+            }
+            if (mainShip.pos.dst(medicine.pos) < minDistMedcine && !medicine.isDestroyed()){
+                mainShip.recover(enemyEmitter.getLevel());
+                medicine.destroy();
             }
         }
 
@@ -199,6 +211,11 @@ public class GameScreen extends BaseScreen {
                     }
                 }
             }
+            if(bullet.getOwner() == mainShip && medicine.isBulletCollision(bullet) && !medicine.isDestroyed()){
+                medicine.destroy();
+                mainShip.recover(enemyEmitter.getLevel());                bullet.destroy();
+            }
+
             if (bullet.getOwner()!= mainShip && mainShip.isBulletCollision(bullet)){
                 mainShip.damage(bullet.getDamage());
                 bullet.destroy();
@@ -214,6 +231,7 @@ public class GameScreen extends BaseScreen {
             star.resize(worldBounds);
         }
         mainShip.resize(worldBounds);
+        medicine.resize(worldBounds);
         gameOverMessage.resize(worldBounds);
         newGameButton.resize(worldBounds);
     }
@@ -223,6 +241,7 @@ public class GameScreen extends BaseScreen {
         super.dispose();
         bg.dispose();
         atlas.dispose();
+        medAtlas.dispose();
         bulletPool.dispose();
         explosionPool.dispose();
         enemyPool.dispose();
